@@ -1,0 +1,714 @@
+<!--Elif Gökpınar / calculator-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            background: rgb(178,199,207);
+            background: linear-gradient(90deg, rgba(178,199,207,1) 0%, rgba(233,235,203,1) 0%, rgba(252,251,225,1) 0%, rgba(202,222,228,1) 28%, rgba(151,209,227,1) 56%, rgba(35,161,199,1) 96%, rgba(15,159,204,1) 99%, rgba(23,154,191,1) 100%, rgba(109,180,203,1) 100%, rgba(185,227,241,1) 100%, rgba(163,211,226,1) 100%, rgba(40,197,247,1) 100%, rgba(39,138,170,1) 100%, rgba(0,172,207,1) 100%, rgba(41,175,215,1) 100%, rgba(22,177,224,1) 100%);
+        }
+        #text1{
+            text-align: right;
+            border:20px;
+            border-color: #30b5cd;
+            width:360px;
+            height:40px;
+            font-size: 25px;
+            position:relative;
+
+        }
+        #history{
+
+            text-align: left;
+            vertical-align: top;
+            color:black;
+            border:20px;
+            background: rgb(247,253,255);
+            background: linear-gradient(90deg, rgba(247,253,255,1) 0%, rgba(189,222,238,1) 40%, rgba(143,197,224,1) 100%, rgba(49,153,193,1) 100%, rgba(48,154,168,1) 100%, rgba(39,98,156,1) 100%, rgba(118,159,212,1) 100%);
+            border-color: #30b5cd;
+            border-radius: 10px;
+            width:210px;
+            height:285px;
+            font-size: 20px;
+            position:relative;
+            top:-150;
+        }
+        #clearHistory {
+            background-color: #30b5cd;
+            border: #fffcfc;
+            border-radius:25px;
+            color: white;
+            width:210px;
+            height:67px;
+            text-align: center;
+            font-size: 24px;
+            position:center;
+        }
+
+        #tablePosition{
+            position:relative;
+            top:20px;
+
+        }
+        #numberButton {
+            background-color: #30b5cd;
+            border: #fffcfc;
+            border-radius:25px;
+            color: white;
+            width:70px;
+            height:70px;
+            text-align: center;
+            font-size: 24px;
+            position:center;
+        }
+        #zero {
+            background-color: #28c1dc;
+            border: #fffcfc;
+            border-radius: 25px;
+            color: white;
+            padding: 20px 65px;
+            text-align: center;
+            font-size: 25px;
+            position:center;
+        }
+        #operation {
+            color:white;
+            background-color: #c5c6b7;
+            text-decoration-color: #fffcfc;
+            border: #fffcfc;
+            border-radius: 25px;
+            width:70px;
+            height:70px;
+            padding: 20px 25px;
+            text-align: center;
+            font-size: 24px;
+            position:center;
+        }
+        #operation2 {
+            color:white;
+            background-color: #c5c6b7;
+            text-decoration-color: #fffcfc;
+            border: #fffcfc;
+            border-radius: 25px;
+            width:70px;
+            height:70px;
+            padding: 71px 25px;
+            text-align: center;
+            font-size: 24px;
+            position:center;
+        }
+
+    </style>
+</head>
+<body onLoad="calculator.txt1.focus();">
+
+<script type="text/javascript">
+
+    var result="";
+    var resultArray="";
+    var control=0;
+    var historyList="";
+    //ıf user press C,all equation is deleted.
+    function startAgain() {
+        result="";
+        calculator.txt1.value=result;
+        document.getElementById("text1").focus();
+    }
+    function takeNumber(x){
+        document.getElementById("text1").focus();
+        var length=result.length;
+        var count=0;
+        //If last indexs of the array are " ",delete them.
+        for(var i=length-1; i>=0; i--){
+            if(count==0 && result[i]==" " &&
+                (result[i-1]!="+" && result[i-1]!="-" && result[i-1]!="*"&& result[i-1]!="/" && result[i-1]!="√") ){
+                result=result.slice(0,-1);
+            }
+            else{
+                count++;
+            }
+        }
+
+
+
+        if(control==1 && 0<=parseFloat(x) && parseFloat(x)<=9){
+            result="";
+            control=0;
+            result=result+x;
+            calculator.txt1.value=result;
+
+        }
+        else if((result.charAt(length-1)=="%" && 0<=x)
+            || (result.charAt(length-1)==" " && result.charAt(length-2)=="%" && 0<=x)){
+            control=0;
+
+        }
+        else if(result.charAt(length-1)==" " && result.charAt(length-2)=="%" && x=="√ "
+            ||(result.charAt(length-1)=="%" && x=="√ ") ){
+            control=0;
+
+        }
+
+        else if(result.charAt(length-1)=="*" || result.charAt(length-1)=="/"
+            || result.charAt(length-1)=="+" || result.charAt(length-1)=="-"
+            || result.charAt(length-1)=="√" || result.charAt(length-1)=="%" ){
+
+            result=result+" " +x;
+            calculator.txt1.value=result;
+            control=0;
+
+        }
+        else{
+            result=result+x;
+            calculator.txt1.value=result;
+            control=0;
+
+        }
+
+
+
+    }
+    function addOperation(x) {
+        var length=result.length;
+
+        if(result.charAt(length-1)==" " && (result.charAt(length-2)!="+" && result.charAt(length-2)!="-"
+            && result.charAt(length-2)!="/" && result.charAt(length-2)!="*" && result.charAt(length-2)!="√")){
+            takeNumber(" + ");
+        }
+        else if( 0<=parseFloat(result.charAt(length-1)) && parseFloat(result.charAt(length-1))<=9) {
+            takeNumber(" + ");
+        }
+        else if( result.charAt(length-1)=="%") {
+            takeNumber("+ ");
+        }
+        else if( result.charAt(length-1)=="√") {
+            calculator.txt1.value=result;
+        }
+        else{
+            calculator.txt1.value=result;
+        }
+        document.getElementById("text1").focus();
+
+    }
+    function subOperation(x) {
+        var length=result.length;
+
+        if(result.charAt(length-1)==" " && (result.charAt(length-2)!="+" && result.charAt(length-2)!="-"
+            && result.charAt(length-2)!="/" && result.charAt(length-2)!="*" && result.charAt(length-2)!="√")){
+            takeNumber(" - ");
+        }
+        else if( 0<=parseFloat(result.charAt(length-1)) && parseFloat(result.charAt(length-1))<=9) {
+            takeNumber(" - ");
+        }
+        else if( result.charAt(length-1)=="%") {
+            takeNumber("- ");
+        }
+        else if( result.charAt(length-1)=="√") {
+            calculator.txt1.value=result;
+        }
+        else{
+            calculator.txt1.value=result;
+        }
+        document.getElementById("text1").focus();
+    }
+    function multOperation(x) {
+        var length=result.length;
+
+        if(result.charAt(length-1)==" " && (result.charAt(length-2)!="+" && result.charAt(length-2)!="-"
+            && result.charAt(length-2)!="/" && result.charAt(length-2)!="*" && result.charAt(length-2)!="√")){
+            takeNumber(" * ");
+        }
+        else if( 0<=parseFloat(result.charAt(length-1)) && parseFloat(result.charAt(length-1))<=9) {
+            takeNumber(" * ");
+        }
+        else if( result.charAt(length-1)=="%") {
+            takeNumber("* ");
+        }
+        else if( result.charAt(length-1)=="√") {
+            calculator.txt1.value=result;
+        }
+        else{
+            calculator.txt1.value=result;
+        }
+        document.getElementById("text1").focus();
+    }
+    function divOperation(x) {
+        var length=result.length;
+
+        if(result.charAt(length-1)==" " && (result.charAt(length-2)!="+" && result.charAt(length-2)!="-"
+            && result.charAt(length-2)!="/" && result.charAt(length-2)!="*" && result.charAt(length-2)!="√") ){
+            takeNumber(" / ");
+        }
+        else if( 0<=parseFloat(result.charAt(length-1)) && parseFloat(result.charAt(length-1))<=9) {
+            takeNumber(" / ");
+        }
+        else if( result.charAt(length-1)=="%") {
+            takeNumber("/ ");
+        }
+        else if( result.charAt(length-1)=="√") {
+            calculator.txt1.value=result;
+        }
+        else{
+            calculator.txt1.value=result;
+        }
+        document.getElementById("text1").focus();
+    }
+    function deleteNumber() {
+        result=result.slice(0, -1);
+        calculator.txt1.value=result;
+        document.getElementById("text1").focus();
+    }
+    function deleteFromKeyBoard() {
+        result= document.getElementById('text1').value;
+        calculator.txt1.value=result;
+        document.getElementById("text1").focus();
+    }
+    function addDot() {
+        var length=result.length;
+        var separators = [' '];
+        var controlArray=[];
+        var add=0;
+        controlArray=result.split(new RegExp('[' + separators.join('') + ']', 'g'));
+        var arrayLength=controlArray.length;
+
+        var isTrue=controlArray[arrayLength-1].includes(".");
+        if(isTrue){
+            calculator.txt1.value=result;
+        }
+        else if(length==0){
+            takeNumber("0.");
+        }
+        else if(result.charAt(length-1)!="." && parseFloat(result.charAt(length-1))>=0){
+            takeNumber(".");
+        }
+        else if(result.charAt(length-1)==" " && (result.charAt(length-2)=="+" || result.charAt(length-2)=="-"
+            ||result.charAt(length-2)=="/" || result.charAt(length-2)=="*")){
+            takeNumber("0.");
+        }
+        else if(result.charAt(length-1)=="+" || result.charAt(length-1)=="-" || result.charAt(length-1)=="*" || result.charAt(length-1)=="/"){
+            takeNumber("0.");
+        }
+        else{
+            calculator.txt1.value=result;
+        }
+        document.getElementById("text1").focus();
+
+    }
+    function changeSign() {
+        var separators = [' '];
+        resultArray=result.split(new RegExp('[' + separators.join('') + ']', 'g'));
+        var i=0;
+        var lastIndex=resultArray.length-1;
+        if(parseFloat(resultArray[lastIndex])>0){
+            result=result.slice(0,result.length-resultArray[lastIndex].length);
+            result=result+"-"+resultArray[lastIndex];
+            document.getElementById("text1").value=result;
+        }
+        else if(parseFloat(resultArray[lastIndex])<0){
+
+            result=result.slice(0,result.length-resultArray[lastIndex].length);
+            resultArray[lastIndex]=resultArray[lastIndex].slice(1);
+            result=result+resultArray[lastIndex];
+            document.getElementById("text1").value=result;
+        }
+        document.getElementById("text1").focus();
+    }
+    function root() {
+        var length=result.length;
+        if(result.charAt(length-1)==" " && result.charAt(length-2)=="√"){
+        }
+        else if(0<=parseFloat(result.charAt(length-1)) && parseFloat(result.charAt(length-1))<=9){
+        }
+        else{
+            takeNumber("√ ");
+        }
+        document.getElementById("text1").focus();
+
+    }
+    function percent() {
+        var length=result.length;
+        if(result.charAt(length-1)==" " && result.charAt(length-2)=="%"){
+        }
+        else if(result.charAt(length-1)==" " &&
+            (0<=parseFloat(result.charAt(length-2)) && parseFloat(result.charAt(length-2))<=9)){
+            takeNumber(" %");
+        }
+        else if(0<=parseFloat(result.charAt(length-1)) && parseFloat(result.charAt(length-1))<=9){
+            takeNumber(" %");
+        }
+        document.getElementById("text1").focus();
+    }
+    function fraction() {
+        var resultCopy=result;
+        var lengthString=result.length;
+        var result2="";
+        if(result.charAt(lengthString-1)==" "){
+            result2=result.slice(0, -1)
+        }
+        else{
+            result2=result;
+        }
+        var separators = [' '];
+        var oneDivArray=[];
+        oneDivArray=result2.split(new RegExp('[' + separators.join('') + ']', 'g'));
+        var length=oneDivArray.length;
+        var numb=0;
+        var i=0;
+
+        if (parseFloat(oneDivArray[length-1])<0 || 0<parseFloat(oneDivArray[length-1])) {
+            oneDivArray[length - 1] = 1 / parseFloat(oneDivArray[length - 1]);
+            result = oneDivArray.toString();
+            result = result.replace(/,/g, " ");
+            calculator.historytxt.value=calculator.historytxt.value+ "1/"+ resultCopy +" = "+result + '\n' ;
+            calculator.txt1.value = result;
+        }
+        document.getElementById("text1").focus();
+    }
+    function resultFunc(){
+        var lengthResult=result.length;
+        var isCalculated=0;
+        var stop=0;
+
+        for(var i=lengthResult-1; i>=0; i--){
+            if(stop==0 && result[i]==" " && (result[i-1]!="+") ){
+                result=result.slice(0,-1);
+            }
+            else{
+                stop++;
+            }
+        }
+        var separators = [' '];
+        resultArray=result.split(new RegExp('[' + separators.join('') + ']', 'g'));
+        var numb=0;
+        var i=0;
+        if(resultArray.length==1){
+            isCalculated=1;
+        }
+
+        for(i=0;i<resultArray.length; i++){
+            if (resultArray[i]=="%"){
+                if(resultArray[i-1]!="" && resultArray[i-1]!=undefined ){
+                    numb=(parseFloat(resultArray[i-1]))/100;
+                    resultArray[i]=numb.toString();
+                    delete resultArray[i-1];
+                }
+
+            }
+
+        }
+        var resultPercent=[];
+
+        for(i=0;i<resultArray.length; i++){
+            if (resultArray[i]!=undefined){
+                resultPercent.push(resultArray[i]);
+            }
+        }
+
+        for(i=0;i<resultPercent.length; i++){
+            if (resultPercent[i]=="√"){
+                if(resultPercent[i+1]!="" && resultPercent[i+1]!=undefined ){
+                    numb=Math.sqrt(parseFloat(resultPercent[i+1]));
+                    resultPercent[i+1]=numb.toString();
+                    delete resultPercent[i];
+                }
+
+            }
+
+        }
+        var resultSqrt=[];
+
+        for(i=0;i<resultPercent.length; i++){
+            if (resultPercent[i]!=undefined){
+                resultSqrt.push(resultPercent[i]);
+            }
+        }
+
+
+        for(i=0;i<resultSqrt.length; i++){
+            if (resultSqrt[i]=="/"){
+                if(resultSqrt[i-1]!="" && resultSqrt[i+1]!=""
+                    &&resultSqrt[i-1]!=undefined && resultSqrt[i+1]!=undefined ){
+                    numb=parseFloat(resultSqrt[i-1])/parseFloat(resultSqrt[i+1])
+                    resultSqrt[i+1]=numb.toString();
+                    delete resultSqrt[i-1];
+                    delete resultSqrt[i];
+
+                }
+
+            }
+
+        }
+        var resultDiv=[];
+
+        for(i=0;i<resultSqrt.length; i++){
+            if (resultSqrt[i]!=undefined){
+                resultDiv.push(resultSqrt[i]);
+            }
+        }
+
+
+        for(i=0;i<resultDiv.length; i++){
+            if (resultDiv[i]=="*"){
+                if(resultDiv[i-1]!="" && resultDiv[i+1]!=""
+                    &&resultDiv[i-1]!=undefined && resultDiv[i+1]!=undefined ){
+                    numb=parseFloat(resultDiv[i-1])*parseFloat(resultDiv[i+1])
+                    resultDiv[i+1]=numb.toString();
+                    delete resultDiv[i-1];
+                    delete resultDiv[i];
+
+                }
+
+            }
+
+        }
+        var resultMult=[];
+        for(i=0;i<resultDiv.length; i++){
+            if (resultDiv[i]!=undefined){
+                resultMult.push(resultDiv[i]);
+            }
+        }
+
+        for(i=0;i<resultMult.length; i++){
+            if (resultMult[i]=="-"){
+                if(resultMult[i-1]!="" && resultMult[i+1]!=""
+                    &&resultMult[i-1]!=undefined && resultMult[i+1]!=undefined ){
+                    numb=parseFloat(resultMult[i-1])-parseFloat(resultMult[i+1])
+                    resultMult[i+1]=numb.toString();
+                    delete resultMult[i-1];
+                    delete resultMult[i];
+
+                }
+
+            }
+
+        }
+
+
+        var resultSub=[];
+        for(i=0;i<resultMult.length; i++){
+            if (resultMult[i]!=undefined){
+                resultSub.push(resultMult[i]);
+            }
+        }
+        for(i=0;i<resultSub.length; i++){
+            if (resultSub[i]=="+"){
+                if(resultSub[i-1]!="" && resultSub[i+1]!=""
+                    &&resultSub[i-1]!=undefined && resultSub[i+1]!=undefined ){
+                    num=parseFloat(resultSub[i-1])+parseFloat(resultSub[i+1])
+                    resultSub[i+1]=num.toString();
+                    delete resultSub[i-1];
+                    delete resultSub[i];
+
+                }
+            }
+        }
+        var resultAdd=[];
+        for(i=0;i<resultSub.length; i++){
+            if (resultSub[i]!=undefined){
+                resultAdd.push(resultSub[i]);
+            }
+        }
+
+        if(isCalculated==0){
+            if(resultPercent.length==1){
+                calculator.txt1.value=resultPercent[0];
+                calculator.historytxt.value=calculator.historytxt.value+ result +" = "+resultPercent[0] + '\n' ;
+                result=resultPercent[0];
+                control=1;
+            }
+            else if(resultSqrt.length==1){
+                calculator.txt1.value=resultSqrt[0];
+                calculator.historytxt.value=calculator.historytxt.value+ result +" = "+resultSqrt[0] + '\n' ;
+                result=resultSqrt[0];
+                control=1;
+            }
+            else if(resultMult.length==1){
+                calculator.txt1.value=resultMult[0];
+                calculator.historytxt.value=calculator.historytxt.value+ result +" = "+resultMult[0] + '\n' ;
+                result=resultMult[0];
+                control=1;
+            }
+            else if(resultDiv.length==1){
+                calculator.txt1.value=resultDiv[0];
+                calculator.historytxt.value=calculator.historytxt.value+ result +" = "+resultDiv[0] + '\n' ;
+                result=resultDiv[0];
+                control=1;
+            }
+            else if(resultAdd.length==1){
+                calculator.txt1.value=resultAdd[0];
+                calculator.historytxt.value=calculator.historytxt.value+ result +" = "+resultAdd[0] + '\n' ;
+                result=resultAdd[0];
+                control=1;
+            }
+            else if(resultSub.length==1){
+                calculator.txt1.value=resultSub[0];
+                calculator.historytxt.value=calculator.historytxt.value+ result +" = "+resultSub[0] + '\n' ;
+                result=resultSub[0];
+                control=1;
+            }
+        }
+        document.getElementById("text1").focus();
+    }
+    function clearHistoryfunc(){
+        calculator.historytxt.value="";
+         document.getElementById("text1").focus();
+    }
+
+    //Only write available characters.
+    function isAvailable(evt) {
+        var theEvent = evt || window.event;
+
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+
+        }
+        var regex = /[0-9]|\.|\+|\-|\*|\/|\%/;
+        if( !regex.test(key) ) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+        else{
+
+            var length=result.length;
+            var separators = [' '];
+            var controlArray=[];
+            var add=0;
+            controlArray=result.split(new RegExp('[' + separators.join('') + ']', 'g'));
+            var arrayLength=controlArray.length;
+
+            var isTrue=controlArray[arrayLength-1].includes(".");
+            if(isTrue){
+                theEvent.returnValue = false;
+                if(theEvent.preventDefault) theEvent.preventDefault();
+                calculator.txt1.value=result;
+            }
+
+            //if + - / * are used end of the equation,don't write the same symbol again.
+            //Because the equation is not completed.
+            else if(result.charAt(length-1)==" " &&(result.charAt(length-2)=="+" ||
+                result.charAt(length-2)=="*" || result.charAt(length-2)=="/"
+            ||result.charAt(length-2)=="-") ){
+                theEvent.returnValue = false;
+                if(theEvent.preventDefault) theEvent.preventDefault();
+            }
+            else if(length==0 && (key=="+"|| key=="-" || key=="*" || key=="/" || key=="%" )){
+                theEvent.returnValue = false;
+                if(theEvent.preventDefault) theEvent.preventDefault();
+            }
+
+            else{
+
+                useKeyBoard();
+            }
+
+        }
+    }
+    //Use keyboard
+    function useKeyBoard(e) {
+        var input = document.getElementById('text1');
+
+        input.onkeyup = function() {
+            var key = event.keyCode || event.charCode;
+
+            if( key == 8 ){
+                deleteFromKeyBoard();
+            }
+            else if(key===13){
+                resultFunc();
+            }
+            else if(0<=event.key && event.key<=9){
+
+                //var number=String.fromCharCode(key);
+                takeNumber(event.key);
+            }
+            else if(event.key=='+' || key==107){
+                addOperation();
+            }
+            else if(event.key=='%'){
+                percent();
+            }
+            else if(event.key=='/' || key==111){
+                divOperation();
+            }
+            else if(event.key=='-' || key==109){
+                subOperation();
+            }
+            else if(event.key=='.' || key==110){
+                addDot();
+            }
+            else if(key==223 || key==106){
+                multOperation();
+            }
+            else {
+                calculator.txt1.value=result;
+            }
+
+        };
+
+    }
+</script>
+
+
+<form  name=calculator>
+    <input id=text1 type="text" name=txt1 onkeypress="isAvailable()"><br/>
+
+    <table  id="tablePosition">
+
+        <tr>
+            <td><input id=numberButton type="button" name=delete value=del onclick="deleteNumber()" > </td>
+            <td><input id=numberButton type="button" name=newDelete value=CE onclick="deleteNumber()" > </td>
+            <td><input id=numberButton type="button" name=allDelete value=C onclick="startAgain()" ></td>
+            <td><input id=operation type="button" name=negpos value=-/+ onclick="changeSign()" > </td>
+            <td><input id=operation type="button" name=rootOp value=√  onclick="root()" > </td>
+            <td rowspan="4" colspan="4"><textarea id=history type="text" name=historytxt disabled="disabled"></textarea></td>
+
+        </tr>
+        <tr>
+            <td><input id=numberButton type="button" name=btn7 value=7 onclick="takeNumber(7)" > </td>
+            <td><input id=numberButton type="button" name=btn8 value=8 onclick="takeNumber(8)" > </td>
+            <td><input id=numberButton type="button" name=btn9 value=9 onclick="takeNumber(9)" > </td>
+            <td><input id=operation type="button" name=divide value=/ onclick="divOperation()" > </td>
+            <td><input id=operation type="button" name=percentOp value=%  onclick="percent()" > </td>
+        </tr>
+        <tr>
+            <td><input id=numberButton type="button" name=btn4 value=4 onclick="takeNumber(4)" ></td>
+            <td><input id=numberButton type="button" name=btn5 value=5 onclick="takeNumber(5)" ></td>
+            <td><input id=numberButton type="button" name=btn6 value=6 onclick="takeNumber(6)" ></td>
+            <td><input id=operation type="button" name=multiply value=* onclick="multOperation()" > </td>
+            <td><input id=operation type="button" name=div value=1/x  onclick="fraction()" > </td>
+
+        </tr>
+
+        <tr>
+            <td><input id=numberButton type="button" name=btn4 value=1 onclick="takeNumber(1)" ></td>
+            <td><input id=numberButton type="button" name=btn5 value=2 onclick="takeNumber(2)" ></td>
+            <td><input id=numberButton type="button" name=btn6 value=3 onclick="takeNumber(3)" ></td>
+            <td><input id=operation type="button" name=sub value=- onclick="subOperation()"></td>
+            <td rowspan="2"><input id=operation2 type="button" name=eq value==  onclick="resultFunc()" > </td>
+
+        </tr>
+        <tr>
+            <td colspan="2"><input id=zero type="button" name=zero value=0 onclick="takeNumber(0)" ></td>
+            <td><input id=numberButton type="button" name=dot value=. onclick="addDot()" ></td>
+            <td><input id=operation type="button" name=add value=+ onclick="addOperation()"></td>
+            <td><input id=clearHistory type="button" name=clearhstry value="Clear History" onclick="clearHistoryfunc()" ></td>
+
+        </tr>
+
+
+
+
+    </table>
+</form>
+
+</script>
+
+
+</body>
+</html>
+
